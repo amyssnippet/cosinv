@@ -19,3 +19,16 @@ export function timeAgo(date: Date | string): string {
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   return `${Math.floor(diff / 86400)}d ago`;
 }
+
+export function isToday(date: Date | string): boolean {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const today = new Date();
+  return d.toDateString() === today.toDateString();
+}
+
+export function isYesterday(date: Date | string): boolean {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  return d.toDateString() === yesterday.toDateString();
+}
