@@ -57,4 +57,22 @@ export function ButtonLoader() {
   return <LoadingSpinner size="sm" color="white" />;
 }
 
+export function PulseLoader({ size = 'md', color = 'primary' }: { size?: 'sm' | 'md' | 'lg'; color?: string }) {
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-8 h-8',
+    lg: 'w-12 h-12',
+  };
+
+  const colorClasses = {
+    primary: 'bg-primary-600',
+    white: 'bg-white',
+    gray: 'bg-gray-600',
+  };
+
+  return (
+    <div className={`${sizeClasses[size]} ${colorClasses[color as keyof typeof colorClasses] || 'bg-primary-600'} rounded-full animate-pulse`} />
+  );
+}
+
 export default LoadingSpinner;
