@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 
+/**
+ * Custom hook that tracks window dimensions.
+ * @returns An object with width and height properties
+ */
 export function useWindowSize() {
   const [size, setSize] = useState({ width: 0, height: 0 });
 
