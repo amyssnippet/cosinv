@@ -73,6 +73,32 @@ class SocketService {
     this.emit('chat-message', { roomId, message });
   }
 
+  reconnect(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.socket?.connected) {
+        resolve();
+        return;
+      }
+
+      this.socket?.connect();
+
+      const onConnect = () => {
+        this.socket?.off('connect', onConnect);
+        this.socket?.off('connect_error', onError);
+        resolve();
+      };
+
+      const onError = (error: any) => {
+        this.socket?.off('connect', onConnect);
+        this.socket?.off('connect_error', onError);
+        reject(error);
+      };
+
+      this.socket?.on('connect', onConnect);
+      this.socket?.on('connect_error', onError);
+    });
+  }
+
   get isConnected(): boolean {
     return this.socket?.connected ?? false;
   }
