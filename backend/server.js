@@ -157,7 +157,7 @@ app.get('/health', async (req, res) => {
 
 // Mount service routers
 app.use('/api/auth', authService.router);
-app.use('/api', jobService);
+app.use('/api', jobService.router);
 
 // Profile API routes
 app.get('/api/profile/:username', async (req, res) => {

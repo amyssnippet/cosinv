@@ -932,4 +932,4 @@ router.put('/:jobId/candidates/:appId/status', authMiddleware, requireRole('recr
   }
 });
 
-module.exports = { initJobService };
+module.exports = { router, initJobService };

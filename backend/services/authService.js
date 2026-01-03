@@ -876,6 +876,7 @@ router.post('/refresh', authMiddleware, async (req, res) => {
 
 // Export
 module.exports = {
+  router,
   initAuthService,
   authMiddleware,
   requireRole,
