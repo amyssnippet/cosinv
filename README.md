@@ -642,5 +642,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 ---
 
 <p align="center">
-  Built with ❤️ by the CosInv Team
+  Built with ❤️ by the Amol Yadav
 </p>
