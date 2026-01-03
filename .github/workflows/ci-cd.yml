@@ -242,32 +242,26 @@ jobs:
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
             # Move env file
-            mv deploy/.env.production backend/.env.local
+            mv deploy/.env.production backend/.env.local 2>/dev/null || true
             
             # Create required directories
             mkdir -p backend/database ssl webroot
-            
-            # Move schema file
-            mv backend/database/schema.sql backend/database/schema.sql 2>/dev/null || true
             
             # Pull latest images
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:latest
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-interview-engine:latest
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:latest
             
-            # Update docker-compose to use pre-built images
-            cat > docker-compose.override.yml << EOF
+            # Update docker-compose to use pre-built images (simpler override without !reset)
+            cat > docker-compose.override.yml << 'EOF'
             version: '3.8'
             services:
               backend:
-                image: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend:latest
-                build: !reset null
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-backend:latest
               interview-engine:
-                image: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-interview-engine:latest
-                build: !reset null
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-interview-engine:latest
               nginx:
-                image: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend:latest
-                build: !reset null
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-frontend:latest
             EOF
             
             # Stop and remove old containers
@@ -279,16 +273,39 @@ jobs:
             # Cleanup old images
             docker image prune -f
             
-            # Health check
-            sleep 10
-            curl -f http://localhost:5000/health || exit 1
+            # Wait for services to be healthy (increased timeout)
+            echo "Waiting for services to start..."
+            sleep 30
             
-            echo "Deployment successful!"
+            # Check container status
+            echo "Container status:"
+            docker ps -a
+            
+            # Show backend logs if health check fails
+            echo "Backend logs:"
+            docker logs cosinv-backend --tail 50
+            
+            # Health check with retry
+            for i in 1 2 3 4 5; do
+              if curl -sf http://localhost:5000/health; then
+                echo ""
+                echo "✅ Health check passed!"
+                exit 0
+              fi
+              echo "Health check attempt $i failed, waiting..."
+              sleep 10
+            done
+            
+            # Final failure - show more logs
+            echo "❌ Health check failed after 5 attempts"
+            echo "Full backend logs:"
+            docker logs cosinv-backend
+            exit 1
 
       - name: Notify on success
         if: success()
-        run: echo "Deployment to DigitalOcean completed successfully!"
+        run: echo "✅ Deployment to DigitalOcean completed successfully!"
 
       - name: Notify on failure
         if: failure()
-        run: echo "Deployment to DigitalOcean failed. Check logs for details."
+        run: echo "❌ Deployment failed. Check logs for details."
