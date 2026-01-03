@@ -1,0 +1,88 @@
+# Docker Compose for Local Development
+# Run: docker-compose -f docker-compose.dev.yml up -d
+# This starts only PostgreSQL and Redis for local development
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: cosinv-postgres
+    environment:
+      POSTGRES_USER: cosinv
+      POSTGRES_PASSWORD: cosinv_secret
+      POSTGRES_DB: cosinv_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cosinv -d cosinv_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dev-network
+    restart: unless-stopped
+
+  # Redis for Message Queue & Caching
+  redis:
+    image: redis:7-alpine
+    container_name: cosinv-redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dev-network
+    restart: unless-stopped
+
+  # Redis Commander - Web UI for Redis (optional, for debugging)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: cosinv-redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - dev-network
+    profiles:
+      - debug
+
+  # pgAdmin - Web UI for PostgreSQL (optional, for debugging)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cosinv-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@cosinv.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - dev-network
+    profiles:
+      - debug
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  dev-network:
+    driver: bridge

@@ -1,0 +1,118 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: cosinv-postgres
+    env_file:
+      - ./backend/.env.local
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cosinv}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cosinv_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-cosinv_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cosinv} -d ${POSTGRES_DB:-cosinv_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Redis for Message Queue & Caching
+  redis:
+    image: redis:7-alpine
+    container_name: cosinv-redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Node.js Backend (Auth Gateway + API)
+  backend:
+    build: ./backend
+    container_name: cosinv-backend
+    env_file:
+      - ./backend/.env.local
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cosinv}:${POSTGRES_PASSWORD:-cosinv_secret}@postgres:5432/${POSTGRES_DB:-cosinv_db}
+      REDIS_URL: redis://redis:6379
+      INTERVIEW_ENGINE_URL: http://interview-engine:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Python FastAPI Interview Engine (AI Agent)
+  interview-engine:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.python
+    container_name: cosinv-interview-engine
+    env_file:
+      - ./backend/.env.local
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cosinv}:${POSTGRES_PASSWORD:-cosinv_secret}@postgres:5432/${POSTGRES_DB:-cosinv_db}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+      args:
+        VITE_API_URL: https://api.cosinv.com
+    container_name: cosinv-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/ssl/certs
+      - ./webroot:/var/www/html
+    depends_on:
+      - backend
+      - interview-engine
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

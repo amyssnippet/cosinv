@@ -1,0 +1,13 @@
+# FastAPI Interview Engine Dependencies
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+google-generativeai==0.4.1
+asyncpg==0.29.0
+redis==5.0.1
+python-multipart==0.0.9
+websockets==12.0
+pydantic==2.6.1
+python-jose[cryptography]==3.3.0
+httpx==0.26.0
+deepgram-sdk==3.2.7
+aiofiles==23.2.1

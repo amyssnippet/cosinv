@@ -1,0 +1,44 @@
+# CosInv AI Interview Platform - Problem Ingestion
+# Ingests LeetCode problems from CSV files
+
+name: Ingest Problems
+
+on:
+  workflow_dispatch:
+    inputs:
+      company:
+        description: 'Company slug to ingest (leave empty for all)'
+        required: false
+        default: ''
+
+jobs:
+  ingest:
+    name: Ingest Company Problems
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install asyncpg python-dotenv
+
+      - name: Run ingestion locally and copy to server
+        env:
+          DATABASE_URL: postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@${{ secrets.DO_HOST }}:5432/${{ secrets.POSTGRES_DB }}
+        run: |
+          cd backend
+          if [ -n "${{ github.event.inputs.company }}" ]; then
+            python scripts/ingest_problems.py --company "${{ github.event.inputs.company }}"
+          else
+            python scripts/ingest_problems.py
+          fi
+
+      - name: Report results
+        run: echo "Problem ingestion completed!"

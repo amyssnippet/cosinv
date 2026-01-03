@@ -1,0 +1,47 @@
+# CosInv AI Interview Platform - Database Migrations
+# Runs database migrations on push to main
+
+name: Database Migrations
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/database/**'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Migration action'
+        required: true
+        default: 'migrate'
+        type: choice
+        options:
+          - migrate
+          - reset
+
+jobs:
+  migrate:
+    name: Run Migrations
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run migrations on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd /opt/cosinv
+            
+            # Copy latest schema
+            docker cp backend/database/schema.sql cosinv-postgres:/tmp/schema.sql
+            
+            # Run migrations (this will only apply new changes due to IF NOT EXISTS)
+            docker exec cosinv-postgres psql -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f /tmp/schema.sql
+            
+            echo "Database migrations completed!"
