@@ -19,8 +19,15 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173", "https://cosinv.com", "https://hr.cosinv.com"],
-    methods: ["GET", "POST"]
+    origin: [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "https://cosinv.com",
+      "https://www.cosinv.com",
+      "https://hr.cosinv.com"
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -71,8 +78,17 @@ app.set('eventPublisher', () => eventPublisher);
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173", "https://cosinv.com", "https://hr.cosinv.com"],
-  credentials: true
+  origin: [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://cosinv.com",
+    "https://www.cosinv.com",
+    "https://hr.cosinv.com",
+    "https://api.cosinv.com"
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(express.json());
 app.use(bodyParser.json());
