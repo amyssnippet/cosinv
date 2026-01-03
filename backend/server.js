@@ -45,14 +45,25 @@ pool.query('SELECT NOW()', (err, res) => {
 
 // Initialize event system
 let eventPublisher;
-(async () => {
+
+// Initialize services after event system is ready
+const initializeServices = async () => {
   try {
     eventPublisher = await initEventSystem(pool);
     console.log('✅ Event system initialized');
   } catch (error) {
-    console.error('❌ Event system initialization failed:', error.message);
+    console.error('⚠️ Event system initialization failed (continuing without events):', error.message);
+    eventPublisher = null;
   }
-})();
+  
+  // Initialize service routers with database pool
+  authService.initAuthService(pool);
+  jobService.initJobService(pool, eventPublisher);
+  console.log('✅ Services initialized');
+};
+
+// Start initialization
+initializeServices();
 
 // Make db and events available to routes
 app.set('db', pool);
@@ -155,7 +166,7 @@ app.get('/health', async (req, res) => {
   res.json(checks);
 });
 
-// Mount service routers
+// Mount service routers (initialized in initializeServices)
 app.use('/api/auth', authService.router);
 app.use('/api', jobService.router);
 
