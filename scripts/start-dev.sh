@@ -20,8 +20,8 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-if ! command -v docker-compose &> /dev/null; then
-    echo -e "${RED}❌ Docker Compose is not installed. Please install it first.${NC}"
+if ! docker compose version &> /dev/null; then
+    echo -e "${RED}❌ Docker Compose plugin is not installed. Please install it first.${NC}"
     exit 1
 fi
 
@@ -42,7 +42,7 @@ fi
 # Start database services
 echo ""
 echo "📦 Starting PostgreSQL and Redis..."
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml up -d
 
 # Wait for services to be healthy
 echo ""

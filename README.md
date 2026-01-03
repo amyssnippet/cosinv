@@ -182,13 +182,13 @@ cd ai-interviewer
 
 ```bash
 # Start PostgreSQL and Redis only
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml up -d
 
 # Verify services are running
 docker ps
 
 # Check logs if needed
-docker-compose -f docker-compose.dev.yml logs -f
+docker compose -f docker-compose.dev.yml logs -f
 ```
 
 ### 3. Configure Environment
@@ -242,7 +242,7 @@ npm run dev
 
 ```bash
 # Start with pgAdmin and Redis Commander
-docker-compose -f docker-compose.dev.yml --profile debug up -d
+docker compose -f docker-compose.dev.yml --profile debug up -d
 ```
 
 | Tool | URL | Credentials |
@@ -306,29 +306,29 @@ EMAIL_FROM=noreply@cosinv.com
 
 ```bash
 # Start PostgreSQL + Redis
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml up -d
 
 # Stop services
-docker-compose -f docker-compose.dev.yml down
+docker compose -f docker-compose.dev.yml down
 
 # Remove volumes (reset database)
-docker-compose -f docker-compose.dev.yml down -v
+docker compose -f docker-compose.dev.yml down -v
 ```
 
 ### Production (Full Stack)
 
 ```bash
 # Build and start all services
-docker-compose up -d --build
+docker compose up -d --build
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Restart a specific service
-docker-compose restart backend
+docker compose restart backend
 
 # Stop all services
-docker-compose down
+docker compose down
 ```
 
 ### Container Overview
@@ -393,8 +393,8 @@ cd /opt/cosinv
 # Create required directories
 mkdir -p backend/database ssl webroot
 
-# Install docker-compose if not present
-apt update && apt install -y docker-compose
+# Docker with compose plugin should be pre-installed on Docker droplet image
+# Verify with: docker compose version
 ```
 
 ### Step 4: Configure GitHub Secrets
@@ -466,7 +466,7 @@ docker run --rm \
   -d hr.cosinv.com
 
 # Restart nginx to apply SSL
-docker-compose restart nginx
+docker compose restart nginx
 ```
 
 ### Step 7: Verify Deployment
@@ -479,7 +479,7 @@ docker ps
 curl https://api.cosinv.com/health
 
 # View logs
-docker-compose logs -f backend
+docker compose logs -f backend
 ```
 
 ---
@@ -593,13 +593,13 @@ GET /health                    # Service health status
 
 ```bash
 # View all container logs
-docker-compose logs
+docker compose logs
 
 # Restart specific container
-docker-compose restart backend
+docker compose restart backend
 
 # Rebuild containers
-docker-compose up -d --build --force-recreate
+docker compose up -d --build --force-recreate
 ```
 
 ### Database Issues
@@ -609,8 +609,8 @@ docker-compose up -d --build --force-recreate
 docker exec -it cosinv-postgres psql -U cosinv -d cosinv_db
 
 # Reset database (WARNING: deletes all data)
-docker-compose -f docker-compose.dev.yml down -v
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml down -v
+docker compose -f docker-compose.dev.yml up -d
 ```
 
 ### Redis Issues

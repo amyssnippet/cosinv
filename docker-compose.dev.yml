@@ -1,5 +1,5 @@
 # Docker Compose for Local Development
-# Run: docker-compose -f docker-compose.dev.yml up -d
+# Run: docker compose -f docker-compose.dev.yml up -d
 # This starts only PostgreSQL and Redis for local development
 
 version: '3.8'
