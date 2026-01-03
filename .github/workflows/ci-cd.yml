@@ -254,7 +254,6 @@ jobs:
             
             # Update docker-compose to use pre-built images (simpler override without !reset)
             cat > docker-compose.override.yml << 'EOF'
-            version: '3.8'
             services:
               backend:
                 image: ghcr.io/${{ github.repository_owner }}/cosinv-backend:latest
