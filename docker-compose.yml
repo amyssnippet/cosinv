@@ -85,13 +85,33 @@ services:
       - app-network
     restart: unless-stopped
 
+  # Frontend Main (Candidate Platform)
+  frontend-main:
+    build:
+      context: ./frontend-main
+    container_name: cosinv-frontend-main
+    environment:
+      - VITE_API_URL=https://api.cosinv.com
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Frontend HR (HR Portal)
+  frontend-hr:
+    build:
+      context: ./frontend-hr
+    container_name: cosinv-frontend-hr
+    environment:
+      - VITE_API_URL=https://api.cosinv.com
+    networks:
+      - app-network
+    restart: unless-stopped
+
   # Nginx Reverse Proxy
   nginx:
     build:
-      context: .
-      dockerfile: ./nginx/Dockerfile
-      args:
-        VITE_API_URL: https://api.cosinv.com
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: cosinv-nginx
     ports:
       - "80:80"
@@ -102,8 +122,11 @@ services:
     depends_on:
       - backend
       - interview-engine
+      - frontend-main
+      - frontend-hr
     networks:
       - app-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
