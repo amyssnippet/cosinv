@@ -35,26 +35,41 @@ jobs:
           cache: 'npm'
           cache-dependency-path: |
             backend/package-lock.json
-            frontend/package-lock.json
+            frontend-main/package-lock.json
+            frontend-hr/package-lock.json
 
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
 
-      - name: Install frontend dependencies
-        working-directory: ./frontend
+      - name: Install frontend-main dependencies
+        working-directory: ./frontend-main
         run: npm ci
 
-      - name: Lint frontend
-        working-directory: ./frontend
+      - name: Install frontend-hr dependencies
+        working-directory: ./frontend-hr
+        run: npm ci
+
+      - name: Lint frontend-main
+        working-directory: ./frontend-main
         run: npm run lint --if-present
 
-      - name: Build frontend
-        working-directory: ./frontend
+      - name: Lint frontend-hr
+        working-directory: ./frontend-hr
+        run: npm run lint --if-present
+
+      - name: Build frontend-main
+        working-directory: ./frontend-main
         run: npm run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+      - name: Build frontend-hr
+        working-directory: ./frontend-hr
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
   # ============================================
   # Job 2: Build and Push Docker Images
@@ -71,8 +86,10 @@ jobs:
 
     outputs:
       backend-image: ${{ steps.meta-backend.outputs.tags }}
-      frontend-image: ${{ steps.meta-frontend.outputs.tags }}
+      frontend-main-image: ${{ steps.meta-frontend-main.outputs.tags }}
+      frontend-hr-image: ${{ steps.meta-frontend-hr.outputs.tags }}
       interview-engine-image: ${{ steps.meta-interview.outputs.tags }}
+      nginx-image: ${{ steps.meta-nginx.outputs.tags }}
 
     steps:
       - name: Checkout code
@@ -130,26 +147,70 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Frontend/Nginx Image
-      - name: Extract metadata for Frontend
-        id: meta-frontend
+      # Frontend Main (Candidate Platform) Image
+      - name: Extract metadata for Frontend Main
+        id: meta-frontend-main
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend-main
           tags: |
             type=sha,prefix=
             type=raw,value=latest
 
-      - name: Build and push Frontend
+      - name: Build and push Frontend Main
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./nginx/Dockerfile
+          context: ./frontend-main
+          file: ./frontend-main/Dockerfile
           push: true
-          tags: ${{ steps.meta-frontend.outputs.tags }}
-          labels: ${{ steps.meta-frontend.outputs.labels }}
+          tags: ${{ steps.meta-frontend-main.outputs.tags }}
+          labels: ${{ steps.meta-frontend-main.outputs.labels }}
           build-args: |
             VITE_API_URL=${{ secrets.VITE_API_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Frontend HR (HR Portal) Image
+      - name: Extract metadata for Frontend HR
+        id: meta-frontend-hr
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend-hr
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest
+
+      - name: Build and push Frontend HR
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend-hr
+          file: ./frontend-hr/Dockerfile
+          push: true
+          tags: ${{ steps.meta-frontend-hr.outputs.tags }}
+          labels: ${{ steps.meta-frontend-hr.outputs.labels }}
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Nginx Reverse Proxy Image
+      - name: Extract metadata for Nginx
+        id: meta-nginx
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-nginx
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest
+
+      - name: Build and push Nginx
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nginx
+          file: ./nginx/Dockerfile
+          push: true
+          tags: ${{ steps.meta-nginx.outputs.tags }}
+          labels: ${{ steps.meta-nginx.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -206,17 +267,23 @@ jobs:
           DEEPGRAM_API_KEY=${{ secrets.DEEPGRAM_API_KEY }}
           
           # Email
-          EMAIL_HOST=${{ secrets.EMAIL_HOST }}
-          EMAIL_PORT=${{ secrets.EMAIL_PORT }}
-          EMAIL_SECURE=${{ secrets.EMAIL_SECURE }}
-          EMAIL_USER=${{ secrets.EMAIL_USER }}
-          EMAIL_PASS=${{ secrets.EMAIL_PASS }}
-          EMAIL_FROM=${{ secrets.EMAIL_FROM }}
-          
-          # URLs
-          FRONTEND_URL=https://cosinv.com
-          HR_FRONTEND_URL=https://hr.cosinv.com
-          INTERVIEW_ENGINE_URL=http://interview-engine:8000
+          EMAIL_HOST=${{ secrets.EMAIL_HOST }}-main:latest
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend-hr:latest
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-nginx:latest
+            
+            # Update docker-compose to use pre-built images (simpler override without !reset)
+            cat > docker-compose.override.yml << 'EOF'
+            services:
+              backend:
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-backend:latest
+              interview-engine:
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-interview-engine:latest
+              frontend-main:
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-frontend-main:latest
+              frontend-hr:
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-frontend-hr:latest
+              nginx:
+                image: ghcr.io/${{ github.repository_owner }}/cosinv-nginx
           EOF
 
       - name: Copy files to server
