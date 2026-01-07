@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 
+/**
+ * Custom hook that tracks the online/offline status of the browser.
+ * @returns A boolean indicating whether the browser is online
+ */
 export function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
