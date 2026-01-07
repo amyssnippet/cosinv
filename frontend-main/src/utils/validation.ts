@@ -19,3 +19,24 @@ export function minLength(value: string, min: number): boolean {
 export function maxLength(value: string, max: number): boolean {
   return value.length <= max;
 }
+
+export function isURL(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function isAlphanumeric(value: string): boolean {
+  return /^[a-zA-Z0-9]+$/.test(value);
+}
+
+export function isNumeric(value: string): boolean {
+  return /^\d+$/.test(value);
+}
+
+export function matchesPattern(value: string, pattern: RegExp): boolean {
+  return pattern.test(value);
+}
