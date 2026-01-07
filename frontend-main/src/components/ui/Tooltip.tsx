@@ -21,11 +21,20 @@ export function Tooltip({ content, children, position = 'top' }: TooltipProps) {
       <div
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
+        onFocus={() => setIsVisible(true)}
+        onBlur={() => setIsVisible(false)}
+        tabIndex={0}
+        role="button"
+        aria-describedby={isVisible ? 'tooltip' : undefined}
       >
         {children}
       </div>
       {isVisible && (
-        <div className={`absolute ${positionClasses[position]} bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg z-10`}>
+        <div
+          id="tooltip"
+          role="tooltip"
+          className={`absolute ${positionClasses[position]} bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg z-10`}
+        >
           {content}
         </div>
       )}
