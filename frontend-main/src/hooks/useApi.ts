@@ -2,6 +2,11 @@ import { useState, useCallback } from 'react'
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://api.cosinv.com'
 
+/**
+ * Custom hook for making API requests.
+ * @template T - The type of data returned by the API.
+ * @returns {Object} An object containing data, loading, error, and request function.
+ */
 export function useApi<T>() {
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(false)
