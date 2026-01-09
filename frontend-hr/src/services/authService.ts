@@ -1,6 +1,9 @@
 import { HRUser, Candidate, JobPosting } from '@/types'
 import { API_URL } from '@/config/constants'
 
+/**
+ * Service class for HR authentication operations.
+ */
 export class HRAuthService {
   static async login(email: string, password: string): Promise<{ user: HRUser; token: string }> {
     const response = await fetch(`${API_URL}/api/hr/auth/login`, {
