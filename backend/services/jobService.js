@@ -10,6 +10,12 @@ const { authMiddleware, requireRole, requireCorporateEmail } = require('./authSe
 let db;
 let eventPublisher; // For Redis/RabbitMQ events
 
+/**
+ * Initializes the job service with the database pool and optional event publisher.
+ * @param {Object} dbPool - The PostgreSQL database pool.
+ * @param {Object} publisher - Optional event publisher for messaging.
+ * @returns {Object} The Express router for job routes.
+ */
 const initJobService = (dbPool, publisher = null) => {
   db = dbPool;
   eventPublisher = publisher;
