@@ -3,6 +3,9 @@ require('dotenv').config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+/**
+ * Tests different Gemini models by attempting to generate content.
+ */
 async function listModels() {
     try {
         // For listing models, we don't need to get a model instance first.
