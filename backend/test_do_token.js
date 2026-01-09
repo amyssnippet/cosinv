@@ -1,5 +1,8 @@
 require('dotenv').config();
 
+/**
+ * Tests the DigitalOcean API token by making a sample request.
+ */
 async function testDOToken() {
     const token = process.env.OLLAMA_API_KEY;
     console.log("Testing DigitalOcean token:", token ? token.substring(0, 20) + "..." : "NOT FOUND");
