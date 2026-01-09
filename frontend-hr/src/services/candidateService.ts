@@ -1,6 +1,9 @@
 import { Candidate } from '@/types'
 import { API_URL } from '@/config/constants'
 
+/**
+ * Service class for candidate-related operations.
+ */
 export class CandidateService {
   static async getCandidates(page: number = 1, limit: number = 20): Promise<{ candidates: Candidate[]; total: number }> {
     const token = localStorage.getItem('hr_auth_token')
