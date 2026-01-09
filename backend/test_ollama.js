@@ -1,4 +1,7 @@
 
+/**
+ * Tests the Ollama API connection by sending a sample chat request.
+ */
 async function testOllama() {
     const OLLAMA_BASE_URL = 'https://inference.do-ai.run/v1';
     const OLLAMA_MODEL = 'llama3-8b-instruct';
