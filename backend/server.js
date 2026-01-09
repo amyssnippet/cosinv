@@ -53,7 +53,10 @@ pool.query('SELECT NOW()', (err, res) => {
 // Initialize event system
 let eventPublisher;
 
-// Initialize services after event system is ready
+/**
+ * Initializes the event system and service routers with the database pool.
+ * This function sets up the core services required for the application.
+ */
 const initializeServices = async () => {
   try {
     eventPublisher = await initEventSystem(pool);
