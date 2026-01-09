@@ -29,6 +29,11 @@ const transporter = nodemailer.createTransport({
 });
 
 // Initialize the auth service with database connection
+/**
+ * Initializes the auth service with the database connection.
+ * @param {Object} dbPool - The PostgreSQL database pool.
+ * @returns {Object} The Express router for auth routes.
+ */
 const initAuthService = (dbPool) => {
   db = dbPool;
   return router;
