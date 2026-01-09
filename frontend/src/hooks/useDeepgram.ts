@@ -5,6 +5,10 @@ import { useInterviewStore } from '../store/useInterviewStore';
 
 const VITE_DEEPGRAM_API_KEY = import.meta.env.VITE_DEEPGRAM_API_KEY;
 
+/**
+ * Custom hook for Deepgram speech-to-text integration.
+ * @returns {Object} Connection state and control functions.
+ */
 export const useDeepgram = () => {
     const { setMicActive, setAudioPlaying, addMessage, isMicActive, setVolumeLevel } = useInterviewStore();
     const [connectionState, setConnectionState] = useState<LiveConnectionState>(LiveConnectionState.CLOSED);
