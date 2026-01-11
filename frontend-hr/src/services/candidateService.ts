@@ -2,7 +2,7 @@ import { Candidate } from '@/types'
 import { API_URL } from '@/config/constants'
 
 /**
- * Service class for candidate-related operations.
+ * Handles candidate retrieval, details, and status updates for HR portal.
  */
 export class CandidateService {
   static async getCandidates(page: number = 1, limit: number = 20): Promise<{ candidates: Candidate[]; total: number }> {
