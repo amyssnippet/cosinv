@@ -1,6 +1,9 @@
 import { Interview } from '@/types'
 import { API_URL } from '@/config/constants'
 
+/**
+ * Service for interview scheduling, retrieval, and management.
+ */
 export class InterviewService {
   static async scheduleInterview(jobId: string, scheduledAt: string): Promise<Interview> {
     const token = localStorage.getItem('auth_token')
