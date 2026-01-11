@@ -1,6 +1,9 @@
 import { JobPosting } from '@/types'
 import { API_URL } from '@/config/constants'
 
+/**
+ * Service for HR job management (listing, creation, update, deletion).
+ */
 export class JobService {
   static async getJobs(page: number = 1, limit: number = 20): Promise<{ jobs: JobPosting[]; total: number }> {
     const token = localStorage.getItem('hr_auth_token')
