@@ -1,6 +1,10 @@
 import { User } from '@/types'
 import { API_URL } from '@/config/constants'
 
+/**
+ * Service for authentication-related API calls.
+ * Handles login, registration, logout, and user retrieval.
+ */
 export class AuthService {
   static async login(email: string, password: string): Promise<{ user: User; token: string }> {
     const response = await fetch(`${API_URL}/api/auth/login`, {
