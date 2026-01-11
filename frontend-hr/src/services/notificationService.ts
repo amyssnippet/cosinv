@@ -8,6 +8,9 @@ interface NotificationData {
   duration?: number;
 }
 
+/**
+ * Service for managing HR portal notifications and alerts.
+ */
 class NotificationService {
   show(notification: Omit<NotificationData, 'id'>) {
     const id = `hr-notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
