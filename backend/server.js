@@ -189,7 +189,9 @@ app.get('/health', async (req, res) => {
 app.use('/api/auth', authService.router);
 app.use('/api', jobService.router);
 
-// Profile API routes
+/**
+ * Get user profile by username.
+ */
 app.get('/api/profile/:username', async (req, res) => {
   try {
     const { username } = req.params;
