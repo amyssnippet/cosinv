@@ -6,6 +6,10 @@ type Theme = 'light' | 'dark';
 class ThemeService {
   private theme: Theme = 'light';
 
+  /**
+   * Gets the current theme.
+   * @returns The current theme ('light' or 'dark')
+   */
   getTheme(): Theme {
     return this.theme;
   }
