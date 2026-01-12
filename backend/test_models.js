@@ -1,3 +1,8 @@
+/**
+ * Test script for Gemini AI models.
+ * Tests model availability and basic functionality.
+ */
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require('dotenv').config();
 
