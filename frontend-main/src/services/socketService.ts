@@ -8,6 +8,11 @@ class SocketService {
   private socket: Socket | null = null;
   private listeners: Map<string, Set<Function>> = new Map();
 
+  /**
+   * Establishes a WebSocket connection with authentication.
+   * @param token - Authentication token
+   * @returns Promise that resolves when connected
+   */
   connect(token: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.socket = io(config.wsUrl, {
