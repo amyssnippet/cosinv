@@ -1,6 +1,9 @@
 import { io, Socket } from 'socket.io-client';
 import { config } from '../config/environment';
 
+/**
+ * Service for managing WebSocket connections and real-time communication.
+ */
 class SocketService {
   private socket: Socket | null = null;
   private listeners: Map<string, Set<Function>> = new Map();
