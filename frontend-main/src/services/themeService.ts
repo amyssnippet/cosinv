@@ -1,5 +1,8 @@
 type Theme = 'light' | 'dark';
 
+/**
+ * Service for managing application theme (light/dark mode).
+ */
 class ThemeService {
   private theme: Theme = 'light';
 
