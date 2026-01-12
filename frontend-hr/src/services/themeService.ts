@@ -1,5 +1,8 @@
 type Theme = 'light' | 'dark';
 
+/**
+ * Service for managing theme settings in HR portal (light/dark mode).
+ */
 class ThemeService {
   private theme: Theme = 'light';
 
