@@ -8,6 +8,9 @@ interface InterviewEvent {
   timestamp: Date;
 }
 
+/**
+ * Service for managing WebSocket connections for HR interview sessions.
+ */
 class SocketService {
   private socket: Socket | null = null;
   private listeners: Map<string, Set<Function>> = new Map();
