@@ -10,6 +10,10 @@ class ThemeService {
     return this.theme;
   }
 
+  /**
+   * Sets the application theme and updates the DOM.
+   * @param theme - The theme to set ('light' or 'dark')
+   */
   setTheme(theme: Theme) {
     this.theme = theme;
     document.documentElement.className = theme;
