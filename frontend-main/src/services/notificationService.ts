@@ -8,6 +8,9 @@ interface NotificationData {
   duration?: number;
 }
 
+/**
+ * Service for managing application notifications and alerts.
+ */
 class NotificationService {
   show(notification: Omit<NotificationData, 'id'>) {
     const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
