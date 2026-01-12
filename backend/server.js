@@ -155,6 +155,9 @@ io.on('connection', (socket) => {
 
 // --- Routes ---
 
+/**
+ * Root endpoint providing API information.
+ */
 app.get('/', (req, res) => {
   res.json({ 
     message: 'CosInv AI Interview Platform API',
@@ -164,6 +167,9 @@ app.get('/', (req, res) => {
 });
 
 // Health check
+/**
+ * Health check endpoint to verify server, database, and Redis status.
+ */
 app.get('/health', async (req, res) => {
   const checks = {
     server: 'ok',
