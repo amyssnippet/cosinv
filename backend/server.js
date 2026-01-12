@@ -1,4 +1,9 @@
 
+/**
+ * Main server file for the AI Interviewer backend.
+ * Sets up Express server, Socket.IO, database connections, and API routes.
+ */
+
 const express = require('express');
 const cors = require('cors');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
