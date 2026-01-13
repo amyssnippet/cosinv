@@ -5,6 +5,12 @@ import { API_URL } from '@/config/constants'
  * Service for interview scheduling, retrieval, and management.
  */
 export class InterviewService {
+  /**
+   * Schedules a new interview for a job posting.
+   * @param jobId - The ID of the job posting
+   * @param scheduledAt - The scheduled date and time
+   * @returns Promise with the created interview data
+   */
   static async scheduleInterview(jobId: string, scheduledAt: string): Promise<Interview> {
     const token = localStorage.getItem('auth_token')
     const response = await fetch(`${API_URL}/api/interviews`, {
