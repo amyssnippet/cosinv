@@ -21,6 +21,12 @@ class NotificationService {
     eventBus.emit(Events.NOTIFICATION_SHOW, { ...notification, id });
   }
 
+  /**
+   * Shows a success notification.
+   * @param title - Notification title
+   * @param message - Optional notification message
+   * @param duration - Optional display duration in milliseconds
+   */
   success(title: string, message?: string, duration?: number) {
     this.show({ type: 'success', title, message, duration });
   }
