@@ -12,6 +12,10 @@ interface NotificationData {
  * Service for managing HR portal notifications and alerts.
  */
 class NotificationService {
+  /**
+   * Shows a notification with the given data.
+   * @param notification - The notification data without id
+   */
   show(notification: Omit<NotificationData, 'id'>) {
     const id = `hr-notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     eventBus.emit(Events.NOTIFICATION_SHOW, { ...notification, id });
