@@ -5,6 +5,12 @@ import { API_URL } from '@/config/constants'
  * Service for job-related API calls (listing, details, search, application).
  */
 export class JobService {
+  /**
+   * Retrieves a paginated list of jobs.
+   * @param page - Page number (default: 1)
+   * @param limit - Number of jobs per page (default: 10)
+   * @returns Promise with jobs array and total count
+   */
   static async getJobs(page: number = 1, limit: number = 10): Promise<{ jobs: Job[]; total: number }> {
     const response = await fetch(`${API_URL}/api/jobs?page=${page}&limit=${limit}`)
     if (!response.ok) throw new Error('Failed to fetch jobs')
