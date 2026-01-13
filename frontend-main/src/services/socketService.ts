@@ -39,6 +39,9 @@ class SocketService {
     });
   }
 
+  /**
+   * Disconnects the WebSocket connection and clears listeners.
+   */
   disconnect(): void {
     if (this.socket) {
       this.socket.disconnect();
