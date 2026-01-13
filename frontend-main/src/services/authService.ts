@@ -6,6 +6,12 @@ import { API_URL } from '@/config/constants'
  * Handles login, registration, logout, and user retrieval.
  */
 export class AuthService {
+  /**
+   * Authenticates a user with email and password.
+   * @param email - User's email address
+   * @param password - User's password
+   * @returns Promise with user data and authentication token
+   */
   static async login(email: string, password: string): Promise<{ user: User; token: string }> {
     const response = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
