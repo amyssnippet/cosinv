@@ -14,6 +14,10 @@ class ThemeService {
     return this.theme;
   }
 
+  /**
+   * Sets the application theme and persists it to localStorage.
+   * @param theme - The theme to set ('light' or 'dark')
+   */
   setTheme(theme: Theme) {
     this.theme = theme;
     document.documentElement.className = theme;
