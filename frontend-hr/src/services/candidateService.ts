@@ -5,6 +5,12 @@ import { API_URL } from '@/config/constants'
  * Handles candidate retrieval, details, and status updates for HR portal.
  */
 export class CandidateService {
+  /**
+   * Retrieves a paginated list of candidates.
+   * @param page - Page number (default: 1)
+   * @param limit - Number of candidates per page (default: 20)
+   * @returns Promise with candidates array and total count
+   */
   static async getCandidates(page: number = 1, limit: number = 20): Promise<{ candidates: Candidate[]; total: number }> {
     const token = localStorage.getItem('hr_auth_token')
     const response = await fetch(`${API_URL}/api/hr/candidates?page=${page}&limit=${limit}`, {
