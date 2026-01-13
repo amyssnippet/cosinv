@@ -1,9 +1,12 @@
+/**
+ * Test script for DigitalOcean API token validation.
+ * Verifies token functionality by making test requests.
+ */
+
 require('dotenv').config();
 
 /**
- * Tests the DigitalOcean API token by making a sample request to the inference endpoint.
- * This function verifies that the OLLAMA_API_KEY environment variable is set and valid
- * by attempting a simple chat completion request.
+ * Tests the DigitalOcean API token by making a sample request.
  */
 async function testDOToken() {
     const token = process.env.OLLAMA_API_KEY;
