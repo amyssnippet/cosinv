@@ -5,6 +5,12 @@ import { API_URL } from '@/config/constants'
  * Service for HR job management (listing, creation, update, deletion).
  */
 export class JobService {
+  /**
+   * Retrieves a paginated list of job postings for HR.
+   * @param page - Page number (default: 1)
+   * @param limit - Number of jobs per page (default: 20)
+   * @returns Promise with jobs array and total count
+   */
   static async getJobs(page: number = 1, limit: number = 20): Promise<{ jobs: JobPosting[]; total: number }> {
     const token = localStorage.getItem('hr_auth_token')
     const response = await fetch(`${API_URL}/api/hr/jobs?page=${page}&limit=${limit}`, {
