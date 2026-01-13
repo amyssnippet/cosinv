@@ -5,6 +5,12 @@ import { API_URL } from '@/config/constants'
  * Service class for HR authentication operations.
  */
 export class HRAuthService {
+  /**
+   * Authenticates an HR user with email and password.
+   * @param email - HR user's email address
+   * @param password - HR user's password
+   * @returns Promise with user data and authentication token
+   */
   static async login(email: string, password: string): Promise<{ user: HRUser; token: string }> {
     const response = await fetch(`${API_URL}/api/hr/auth/login`, {
       method: 'POST',
