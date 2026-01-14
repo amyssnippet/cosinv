@@ -56,4 +56,13 @@ export class JobService {
     })
     if (!response.ok) throw new Error('Failed to delete job')
   }
+
+  static async getJobStats(): Promise<{ totalJobs: number; activeJobs: number; totalApplications: number }> {
+    const token = localStorage.getItem('hr_auth_token')
+    const response = await fetch(`${API_URL}/api/hr/jobs/stats`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) throw new Error('Failed to fetch job stats')
+    return response.json()
+  }
 }
