@@ -15,6 +15,15 @@ const bodyParser = require('body-parser');
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// Utility function to validate JWT token
+function validateToken(token) {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    return null;
+  }
+}
+
 // Import services
 const authService = require('./services/authService');
 const jobService = require('./services/jobService');
