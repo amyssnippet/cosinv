@@ -44,4 +44,14 @@ export class AuthService {
     if (!response.ok) throw new Error('Failed to fetch user')
     return response.json()
   }
+
+  static async refreshToken(): Promise<{ token: string }> {
+    const token = localStorage.getItem('auth_token')
+    const response = await fetch(`${API_URL}/api/auth/refresh`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) throw new Error('Failed to refresh token')
+    return response.json()
+  }
 }
