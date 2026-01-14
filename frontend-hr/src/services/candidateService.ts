@@ -51,4 +51,13 @@ export class CandidateService {
     if (!response.ok) throw new Error('Failed to fetch interviews')
     return response.json()
   }
+
+  static async searchCandidates(query: string, page: number = 1, limit: number = 20): Promise<{ candidates: Candidate[]; total: number }> {
+    const token = localStorage.getItem('hr_auth_token')
+    const response = await fetch(`${API_URL}/api/hr/candidates/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) throw new Error('Failed to search candidates')
+    return response.json()
+  }
 }
