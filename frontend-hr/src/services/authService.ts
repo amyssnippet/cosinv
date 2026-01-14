@@ -33,4 +33,17 @@ export class HRAuthService {
   static async logout(): Promise<void> {
     await fetch(`${API_URL}/api/hr/auth/logout`, { method: 'POST' })
   }
+
+  static async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    const token = localStorage.getItem('hr_auth_token')
+    const response = await fetch(`${API_URL}/api/hr/auth/change-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    })
+    if (!response.ok) throw new Error('Failed to change password')
+  }
 }
