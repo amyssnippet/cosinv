@@ -55,4 +55,13 @@ export class InterviewService {
     })
     if (!response.ok) throw new Error('Failed to submit code')
   }
+
+  static async cancelInterview(interviewId: string): Promise<void> {
+    const token = localStorage.getItem('auth_token')
+    const response = await fetch(`${API_URL}/api/interviews/${interviewId}/cancel`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) throw new Error('Failed to cancel interview')
+  }
 }
