@@ -38,4 +38,10 @@ export class JobService {
     if (!response.ok) throw new Error('Application failed')
     return response.json()
   }
+
+  static async searchJobs(query: string, page: number = 1, limit: number = 10): Promise<{ jobs: Job[]; total: number }> {
+    const response = await fetch(`${API_URL}/api/jobs/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`)
+    if (!response.ok) throw new Error('Failed to search jobs')
+    return response.json()
+  }
 }
