@@ -49,6 +49,11 @@ class SocketService {
     this.listeners.clear();
   }
 
+  reconnect(token: string): Promise<void> {
+    this.disconnect();
+    return this.connect(token);
+  }
+
   emit(event: string, data?: any): void {
     if (!this.socket?.connected) {
       console.warn('HR Socket not connected:', event);
