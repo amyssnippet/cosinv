@@ -34,6 +34,10 @@ class ThemeService {
       this.setTheme(saved);
     }
   }
+
+  get isDarkMode(): boolean {
+    return this.theme === 'dark';
+  }
 }
 
 export const themeService = new ThemeService();
