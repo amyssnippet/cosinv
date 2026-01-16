@@ -42,6 +42,10 @@ class NotificationService {
   info(title: string, message?: string, duration?: number) {
     this.show({ type: 'info', title, message, duration });
   }
+
+  dismissAll() {
+    eventBus.emit(Events.NOTIFICATION_DISMISS_ALL);
+  }
 }
 
 export const notificationService = new NotificationService();
