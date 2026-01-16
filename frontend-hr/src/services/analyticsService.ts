@@ -35,6 +35,10 @@ class AnalyticsService {
   clearEvents() {
     this.events = [];
   }
+
+  exportEvents(): string {
+    return JSON.stringify(this.events, null, 2);
+  }
 }
 
 export const analyticsService = new AnalyticsService();
