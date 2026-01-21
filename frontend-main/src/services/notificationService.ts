@@ -46,6 +46,10 @@ class NotificationService {
   dismissAll() {
     eventBus.emit(Events.NOTIFICATION_DISMISS_ALL);
   }
+
+  clearHistory(): void {
+    // In a real app, this would clear from storage/service
+  }
 }
 
 export const notificationService = new NotificationService();
