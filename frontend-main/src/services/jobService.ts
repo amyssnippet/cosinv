@@ -44,4 +44,13 @@ export class JobService {
     if (!response.ok) throw new Error('Failed to search jobs')
     return response.json()
   }
+
+  static async getSavedJobs(): Promise<Job[]> {
+    const token = localStorage.getItem('auth_token')
+    const response = await fetch(`${API_URL}/api/jobs/saved`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) throw new Error('Failed to fetch saved jobs')
+    return response.json()
+  }
 }
