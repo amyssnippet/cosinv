@@ -60,4 +60,17 @@ export class CandidateService {
     if (!response.ok) throw new Error('Failed to search candidates')
     return response.json()
   }
+
+  static async bulkUpdateCandidates(candidateIds: string[], updates: Partial<Candidate>): Promise<void> {
+    const token = localStorage.getItem('hr_auth_token')
+    const response = await fetch(`${API_URL}/api/hr/candidates/bulk-update`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ candidateIds, updates }),
+    })
+    if (!response.ok) throw new Error('Failed to bulk update candidates')
+  }
 }
