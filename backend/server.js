@@ -24,6 +24,11 @@ function validateToken(token) {
   }
 }
 
+// Utility function to hash password
+function hashPassword(password) {
+  return require('crypto').createHash('sha256').update(password).digest('hex');
+}
+
 // Import services
 const authService = require('./services/authService');
 const jobService = require('./services/jobService');
