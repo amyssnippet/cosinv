@@ -54,4 +54,13 @@ export class AuthService {
     if (!response.ok) throw new Error('Failed to refresh token')
     return response.json()
   }
+
+  static async verifyEmail(token: string): Promise<void> {
+    const response = await fetch(`${API_URL}/api/auth/verify-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    })
+    if (!response.ok) throw new Error('Failed to verify email')
+  }
 }
