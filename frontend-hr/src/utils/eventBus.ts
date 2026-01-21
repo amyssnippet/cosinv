@@ -1,4 +1,4 @@
-type EventCallback = (...args: any[]) => void;
+type EventCallback = (...args: string[]) => void;
 
 class EventEmitter {
   private events: Map<string, Set<EventCallback>> = new Map();
@@ -16,7 +16,7 @@ class EventEmitter {
     this.events.get(event)?.delete(callback);
   }
 
-  emit(event: string, ...args: any[]): void {
+  emit(event: string, ...args: string[]): void {
     this.events.get(event)?.forEach(callback => {
       try {
         callback(...args);
@@ -27,7 +27,7 @@ class EventEmitter {
   }
 
   once(event: string, callback: EventCallback): () => void {
-    const wrapper = (...args: any[]) => {
+    const wrapper = (...args: string[]) => {
       this.off(event, wrapper);
       callback(...args);
     };
