@@ -38,6 +38,10 @@ class ThemeService {
   get isDarkMode(): boolean {
     return this.theme === 'dark';
   }
+
+  getAvailableThemes(): string[] {
+    return ['light', 'dark'];
+  }
 }
 
 export const themeService = new ThemeService();
