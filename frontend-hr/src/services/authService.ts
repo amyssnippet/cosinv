@@ -46,4 +46,11 @@ export class HRAuthService {
     })
     if (!response.ok) throw new Error('Failed to change password')
   }
-}
+  static async getUserPermissions(): Promise<string[]> {
+    const token = localStorage.getItem('hr_auth_token')
+    const response = await fetch(`${API_URL}/api/hr/auth/permissions`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) throw new Error('Failed to fetch permissions')
+    return response.json()
+  }}
