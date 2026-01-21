@@ -65,4 +65,14 @@ export class JobService {
     if (!response.ok) throw new Error('Failed to fetch job stats')
     return response.json()
   }
+
+  static async duplicateJob(jobId: string): Promise<JobPosting> {
+    const token = localStorage.getItem('hr_auth_token')
+    const response = await fetch(`${API_URL}/api/hr/jobs/${jobId}/duplicate`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) throw new Error('Failed to duplicate job')
+    return response.json()
+  }
 }
