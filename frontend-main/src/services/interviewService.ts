@@ -64,4 +64,18 @@ export class InterviewService {
     })
     if (!response.ok) throw new Error('Failed to cancel interview')
   }
+
+  static async rescheduleInterview(interviewId: string, newScheduledAt: string): Promise<Interview> {
+    const token = localStorage.getItem('auth_token')
+    const response = await fetch(`${API_URL}/api/interviews/${interviewId}/reschedule`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ scheduledAt: newScheduledAt }),
+    })
+    if (!response.ok) throw new Error('Failed to reschedule interview')
+    return response.json()
+  }
 }
