@@ -115,6 +115,11 @@ class SocketService {
     });
   }
 
+  getConnectionStatus(): string {
+    if (!this.socket) return 'disconnected';
+    return this.socket.connected ? 'connected' : 'connecting';
+  }
+
   get isConnected(): boolean {
     return this.socket?.connected ?? false;
   }
