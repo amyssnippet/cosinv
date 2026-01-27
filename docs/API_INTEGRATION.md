@@ -1,5 +1,7 @@
 # API Integration Guide
 
+<!-- Commit on 2026-01-27 -->
+
 ## Authentication
 
 All protected endpoints require a Bearer token in the Authorization header:
