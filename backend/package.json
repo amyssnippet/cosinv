@@ -1,6 +1,6 @@
 {
   "name": "cosinv-backend",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Backend for CosInv AI Interview Platform",
   "main": "server.js",
   "scripts": {
