@@ -1,5 +1,7 @@
 # CosInv - AI Interviewer Platform
 
+<!-- Commit on 2026-01-27 -->
+
 Multi-frontend architecture with separate candidate and HR portals.
 
 ## Architecture
