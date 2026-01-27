@@ -1,4 +1,5 @@
 # FastAPI Interview Engine Dependencies
+# Commit on 2026-01-27
 fastapi==0.109.2
 uvicorn[standard]==0.27.1
 google-generativeai==0.4.1
