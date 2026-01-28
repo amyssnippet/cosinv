@@ -63,4 +63,13 @@ export class AuthService {
     })
     if (!response.ok) throw new Error('Failed to verify email')
   }
+
+  static async forgotPassword(email: string): Promise<void> {
+    const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+    if (!response.ok) throw new Error('Failed to send reset email')
+  }
 }
