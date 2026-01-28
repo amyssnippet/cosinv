@@ -1,6 +1,7 @@
 {
   "name": "Aether AI - The Future of Intelligent Calls",
   "description": "A premium landing page for Aether, an AI-powered video calling and collaboration platform featuring persistent memory, real-time AI assistance, and shared creative workspaces.",
+  "commit": "2026-01-28",
   "requestFramePermissions": [
     "camera",
     "microphone"
